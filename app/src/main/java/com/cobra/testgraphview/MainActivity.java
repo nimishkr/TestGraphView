@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        //This is just for commit purposes
         Forward.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
