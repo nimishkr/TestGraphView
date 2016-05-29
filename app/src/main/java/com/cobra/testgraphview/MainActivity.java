@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     double lastY = 0;
     double lastX2 = 0;
     double lastY2 = 0;
-    double angle = 0;
+    double angle = 90;
     double angleTurned = 0;
     static double maxY = 0;
     static double maxX = 0;
@@ -108,16 +108,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        entries1 = new ArrayList<>();
-        entries1.add(new PointValue(2, 0));
-        entries1.add(new PointValue(6, 1));
-        entries1.add(new PointValue(6, 2));
-        entries1.add(new PointValue(2, 3));
-        entries1.add(new PointValue(18, 4));
-        entries1.add(new PointValue(9, 5));
-
-
-
         Forward.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -149,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (angle < 90) {
                             Log.d("in", "90");
-                            if (decreasing()) {
+                            if (decreasingX()) {
                                 Log.d("in", "decreasing1");
                                 if (newY1 > lastY && newX1 < lastX) {
                                     entries.add(new PointValue((float) newX1, (float) newY1));
@@ -177,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
                         } else if (angle > 90 && angle <= 180) {
                             Log.d("in", "angle 180");
-                            if (decreasing())
+                            if (decreasingX())
                                 if (newY1 > lastY && newX1 < lastX) {
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
@@ -215,11 +205,11 @@ public class MainActivity extends AppCompatActivity {
                     finalTime = (endTime - startTime);
                     finalTime = 3 % (finalTime / 1000);
                     angleTurned = (360 / 3) * finalTime;
-                    if (angle + angleTurned > 180) {
-                        angleTurned += angle;
-                        angle = 0;
+                    if (angle - angleTurned < 0) {
+                        angleTurned -= angle;
+                        angle = 180;
                     }
-                    angle += angleTurned;
+                    angle -= angleTurned;
                     double radAngle = Math.toRadians(angle);
 
                     gradient = Math.tan(radAngle);
@@ -247,11 +237,14 @@ public class MainActivity extends AppCompatActivity {
                     finalTime = (endTime - startTime);
                     finalTime = 3 % (finalTime / 1000);
                     angleTurned = (360 / 3) * finalTime;
-                    if (angle - angleTurned < 0){
-                        angleTurned -= angle;
-                        angle = 180;
+                    if (angle + angleTurned > 180){
+                        angleTurned += angle - 180;
+                        angle = angleTurned;
                     }
-                    angle -= angleTurned;
+                    else {
+                        angle += angleTurned;
+                    }
+
                     double radAngle = Math.toRadians(angle);
                     gradient = Math.tan(radAngle);
                     Log.d("start", "time " + startTime);
@@ -293,12 +286,12 @@ public class MainActivity extends AppCompatActivity {
                         newY2 = (gradient * (newX2 - lastX)) + lastY;
 
                         if (angle < 90) {
-                            if (decreasing()) {
-                                if (newY1 > lastY && newX1 > lastX) {
+                            if (decreasingX()) {
+                                if (newY1 < lastY && newX1 > lastX) {
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
-                                } else if (newY2 > lastY && newX2 > lastX) {
+                                } else {
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
@@ -308,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
-                                } else if (newY2 < lastY && lastX > newX2) {
+                                } else {
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
@@ -316,12 +309,12 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         } else if (angle > 90 && angle <= 180) {
-                            if (decreasing())
+                            if (decreasingX())
                                 if (newY1 < lastY && newX1 > lastX) {
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
-                                } else if (newY2 < lastY && newX2 > lastX) {
+                                } else {
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
@@ -331,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
                                         entries.add(new PointValue((float) newX1, (float) newY1));
                                         shiftLast(newX1, newY1);
                                         setMinMax(newX1, newY1);
-                                    } else if (newY2 > lastY && newX2 < lastX) {
+                                    } else  {
                                         entries.add(new PointValue((float) newX2, (float) newY2));
                                         shiftLast(newX2, newY2);
                                         setMinMax(newX2, newY2);
@@ -383,12 +376,14 @@ public class MainActivity extends AppCompatActivity {
         lastY = newY;
     }
 
-    public boolean decreasing(){
+    public boolean decreasingX(){
         if(lastX < lastX2){
             return true;
         }
         else return false;
     }
+
+
 
     public static ArrayList<PointValue> getArray() {
         return entries;
