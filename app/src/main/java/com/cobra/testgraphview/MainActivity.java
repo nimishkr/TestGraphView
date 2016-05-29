@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     static double minY = 0;
     static double minX = 0;
     boolean isPressed = false;
+    static double secAngle = 0;
 
 
     @Override
@@ -139,19 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (angle < 90) {
                             Log.d("in", "90");
-                            if (decreasingX()) {
-                                Log.d("in", "decreasing1");
-                                if (newY1 > lastY && newX1 < lastX) {
-                                    entries.add(new PointValue((float) newX1, (float) newY1));
-                                    shiftLast(newX1, newY1);
-                                    setMinMax(newX1, newY1);
-                                } else {
-                                    Log.d("in", "decreasing2");
-                                    entries.add(new PointValue((float) newX2, (float) newY2));
-                                    shiftLast(newX2, newY2);
-                                    setMinMax(newX2, newY2);
-                                }
-                            } else {
+                            if (secAngle > 0 && secAngle < 90){
                                 if (newY1 > lastY && newX1 > lastX) {
                                     Log.d("in", "else1");
                                     entries.add(new PointValue((float) newX1, (float) newY1));
@@ -164,32 +153,49 @@ public class MainActivity extends AppCompatActivity {
                                     setMinMax(newX2, newY2);
                                 }
                             }
-
-                        } else if (angle > 90 && angle <= 180) {
-                            Log.d("in", "angle 180");
-                            if (decreasingX())
-                                if (newY1 > lastY && newX1 < lastX) {
-                                    entries.add(new PointValue((float) newX1, (float) newY1));
-                                    shiftLast(newX1, newY1);
-                                    setMinMax(newX1, newY1);
-                                } else {
-                                    entries.add(new PointValue((float) newX2, (float) newY2));
-                                    shiftLast(newX2, newY2);
-                                    setMinMax(newX2, newY2);
-                                }
                             else {
-                                if (newY1 < lastY && newX1 > lastX) {
+                                if (newY1 < lastY && newX1 < lastX){
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
-                                } else {
+                                }
+                                else {
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
                                 }
                             }
+
+                            }
+
+                        else if (angle > 90 && angle <= 180) {
+                            Log.d("in", "angle 180");
+                            if (secAngle > 90 && secAngle < 180){
+                                if (newY1 < lastY && newX1 > lastX){
+                                    entries.add(new PointValue((float) newX1, (float) newY1));
+                                    shiftLast(newX1, newY1);
+                                    setMinMax(newX1, newY1);
+                                }
+                                else {
+                                    entries.add(new PointValue((float) newX2, (float) newY2));
+                                    shiftLast(newX2, newY2);
+                                    setMinMax(newX2, newY2);
+                                }
+                            }
+                            else {
+                                if (newY1 > lastY && newX1 < lastX){
+                                    entries.add(new PointValue((float) newX1, (float) newY1));
+                                    shiftLast(newX1, newY1);
+                                    setMinMax(newX1, newY1);
+                                }
+                                else {
+                                    entries.add(new PointValue((float) newX2, (float) newY2));
+                                    shiftLast(newX2, newY2);
+                                    setMinMax(newX2, newY2);
+                                }
+                            }
+                            }
                         }
-                    }
                 }
                 return false;
             }
@@ -205,6 +211,13 @@ public class MainActivity extends AppCompatActivity {
                     finalTime = (endTime - startTime);
                     finalTime = 3 % (finalTime / 1000);
                     angleTurned = (360 / 3) * finalTime;
+
+                    if (secAngle + angleTurned < 360){
+                        secAngle += angleTurned;
+                    }
+                    else if ((secAngle + angleTurned) > 360){
+                        secAngle = (secAngle + angleTurned) - 360;
+                    }
                     if (angle - angleTurned < 0) {
                         angleTurned -= angle;
                         angle = 180;
@@ -237,6 +250,14 @@ public class MainActivity extends AppCompatActivity {
                     finalTime = (endTime - startTime);
                     finalTime = 3 % (finalTime / 1000);
                     angleTurned = (360 / 3) * finalTime;
+
+                    if (secAngle - angleTurned < 0){
+                        secAngle = (angleTurned - secAngle);
+                    }
+                    else if (secAngle - angleTurned > 0){
+                        secAngle -= angleTurned;
+                    }
+
                     if (angle + angleTurned > 180){
                         angleTurned += angle - 180;
                         angle = angleTurned;
@@ -286,49 +307,60 @@ public class MainActivity extends AppCompatActivity {
                         newY2 = (gradient * (newX2 - lastX)) + lastY;
 
                         if (angle < 90) {
-                            if (decreasingX()) {
-                                if (newY1 < lastY && newX1 > lastX) {
+                            Log.d("in", "90");
+                            if (secAngle > 0 && secAngle < 90){
+                                if (newY1 < lastY && newX1 < lastX) {
+                                    Log.d("in", "else1");
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
                                 } else {
+                                    Log.d("in", "else2");
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
                                 }
-                            } else {
-                                if (newY1 < lastY && newX1 < lastX) {
+                            }
+                            else {
+                                if (newY1 > lastY && newX1 > lastX){
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
-                                } else {
+                                }
+                                else {
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
                                 }
                             }
 
-                        } else if (angle > 90 && angle <= 180) {
-                            if (decreasingX())
-                                if (newY1 < lastY && newX1 > lastX) {
+                        }
+
+                        else if (angle > 90 && angle <= 180) {
+                            Log.d("in", "angle 180");
+                            if (secAngle > 90 && secAngle < 180){
+                                if (newY1 > lastY && newX1 < lastX){
                                     entries.add(new PointValue((float) newX1, (float) newY1));
                                     shiftLast(newX1, newY1);
                                     setMinMax(newX1, newY1);
-                                } else {
+                                }
+                                else {
                                     entries.add(new PointValue((float) newX2, (float) newY2));
                                     shiftLast(newX2, newY2);
                                     setMinMax(newX2, newY2);
                                 }
+                            }
+                            else {
+                                if (newY1 < lastY && newX1 > lastX){
+                                    entries.add(new PointValue((float) newX1, (float) newY1));
+                                    shiftLast(newX1, newY1);
+                                    setMinMax(newX1, newY1);
+                                }
                                 else {
-                                    if (newY1 > lastY && newX1 < lastX) {
-                                        entries.add(new PointValue((float) newX1, (float) newY1));
-                                        shiftLast(newX1, newY1);
-                                        setMinMax(newX1, newY1);
-                                    } else  {
-                                        entries.add(new PointValue((float) newX2, (float) newY2));
-                                        shiftLast(newX2, newY2);
-                                        setMinMax(newX2, newY2);
-                                    }
+                                    entries.add(new PointValue((float) newX2, (float) newY2));
+                                    shiftLast(newX2, newY2);
+                                    setMinMax(newX2, newY2);
+                                }
                                 }
                         }
 
