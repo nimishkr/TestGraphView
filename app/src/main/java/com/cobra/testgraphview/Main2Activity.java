@@ -1,5 +1,6 @@
 package com.cobra.testgraphview;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.renderer.AxisRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +74,6 @@ public class Main2Activity extends AppCompatActivity {
         lineChart.setLineChartData(data);
 
         lineChart.setHorizontalScrollBarEnabled(true);
-        lineChart.animate();
         lineChart.offsetTopAndBottom(10);
 
 

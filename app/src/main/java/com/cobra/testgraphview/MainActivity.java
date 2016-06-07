@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     double distance = 0;
     String last;
     int speed = 10;
-    double lastX = 0;
+    double lastX = 1;
     double lastY = 0;
     double lastX2 = 0;
     double lastY2 = 0;
@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         startStop = (Button) findViewById(R.id.btStart);
         Graph = (Button) findViewById(R.id.btGraph);
         entries = new ArrayList<>();
+        entries.add(new PointValue(1,0));
+
 
         startStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,8 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     distance = (finalTime * speed);
                     if (isEmpty()) {
                         entries.add(new PointValue(1, (float) (distance / 10)));
-                        lastX = 1;
-                        lastY = distance / 10;
+                        shiftLast(1, (distance / 10));
                         setMinMax(distance / 10, 1);
                         Log.d("I am here", "inside the if loop");
 
@@ -211,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     endTime = System.currentTimeMillis();
                     finalTime = (endTime - startTime);
-                    finalTime = 3 % (finalTime / 1000);
-                    angleTurned = (360 / 3) * finalTime;
+                    finalTime = 2.5 % (finalTime / 1000);
+                    angleTurned = (360 / 2.5) * finalTime;
 
                     if (secAngle + angleTurned < 360){
                         secAngle += angleTurned;
@@ -250,8 +251,8 @@ public class MainActivity extends AppCompatActivity {
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     endTime = System.currentTimeMillis();
                     finalTime = (endTime - startTime);
-                    finalTime = 3 % (finalTime / 1000);
-                    angleTurned = (360 / 3) * finalTime;
+                    finalTime = 2.5 % (finalTime / 1000);
+                    angleTurned = (360 / 2.5) * finalTime;
 
                     if (secAngle - angleTurned < 0){
                         secAngle = (angleTurned - secAngle);
@@ -389,18 +390,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static double getMaxY(){
-        return maxY;
-    }
-    public static double getMaxX(){
-        return maxX;
-    }
-    public static double getMinY(){
-        return minY;
-    }
-    public static double getMinX(){
-        return minX;
-    }
 
     public void shiftLast(double newX, double newY){
         lastX2 = lastX;
@@ -410,20 +399,8 @@ public class MainActivity extends AppCompatActivity {
         lastY = newY;
     }
 
-    public boolean decreasingX(){
-        if(lastX < lastX2){
-            return true;
-        }
-        else return false;
-    }
-
-
-
     public static ArrayList<PointValue> getArray() {
         return entries;
-    }
-    public static ArrayList<PointValue> getArray1() {
-        return entries1;
     }
 
     public boolean isEmpty() {
